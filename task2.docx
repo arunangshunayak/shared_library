@@ -1,0 +1,89 @@
+1.	Install and configure 'ntp' - with singapore time zone
+
+for installation run the following commands
+sudo apt-get update
+sudo apt-get install ntp
+
+#Now for configuration to switch to an ntp server pool to singapore location
+open the ntp configuration file in the nano editor as sudo by running this following command:
+sudo nano /etc/ntp.conf
+copy the singapore pool zone from its website
+
+	   server 0.sg.pool.ntp.org iburst
+	   server 1.sg.pool.ntp.org iburst
+	   server 2.sg.pool.ntp.org iburst
+	   server 3.sg.pool.ntp.org iburst
+
+ 	now, restart the ntp server - sudo service ntp restart
+
+2.	Install tomcat version 8 (a brief explaination about the it's directories in doc)
+for installation follow the below commands – 
+sudo apt-get update
+sudo apt-get install tomcat8
+
+Now tomcat8 service will start automatically. Check using systemctl status tomcat8.
+Your bin, webapps etc directories will be present in var/lib/tomcat8
+and the configurartion files will be under /etc/tomcat8
+
+tomcat's sub-directories
+
+Take a look at the tomcat installed directory. it contains the these sub-directories:
+•	bin: contains the binaries and scripts (e.g., startup.bat and shutdown.bat for windows; startup.sh and shutdown.sh for unixes and mac os x).
+•	conf: contains the system-wide configuration files, such as server.xml, web.xml, and context.xml.
+•	webapps: contains the webapps to be deployed. you can also place the war (webapp archive) file for deployment here.
+•	lib: contains the tomcat's system-wide library jar files, accessible by all webapps. you could also place external jar file (such as mysql jdbc driver) here.
+•	logs: contains tomcat's log files. you may need to check for error messages here.
+•	work: tomcat's working directory used by jsp, for jsp-to-servlet conversion.
+
+3.	Install java version 8 with home directory set as an environment variable
+#for installation type these command – 
+sudo apt install openjdk-8-jdk
+#for checking whether it is successfully installed or not type – 
+java –version
+#now setting home directory set as an environment variable, follow these command
+export java_home=/usr/lib/jvm/java-8-openjdk-amd64
+to check whether your java_home path has been successfully saved, enter the following command to check.
+echo $java_home
+
+like we have added java_home path, we will now update the path variable as well. To do that, enter the following command on the terminal.
+
+export path=$path:$java_home/bin
+check the path variable by entering the following command
+echo $path
+
+4.	Install 'build essentials' (mention in doc that why do we need it ).
+sudo apt-get install build-essential
+We need it because whenever we want to compile a program such as c++, c program or for use of various libraries we need to have this build essential package to compile and build our program. So that’s why it is important. 
+
+
+5.	Install logrotate and rotate tomcat's catalina.out log as:rotate the log file after 500kb & keep only last 5 files.
+
+folder containing configuration files for the rotating logs – cd  /etc/logrotate.d ls
+we will see nginx, apache2, tomcat and many more.
+so if i want to rotate log file in suppose nginx. then command – more nginx, or more apache2 
+but we have to rotate the tomcat's catalina.out file so we will make and edit file - /etc/logrotate.d/tomcat
+command - 
+sudo vi /etc/logrotate.d/tomcat
+
+And type these lines as per the rotation requirement
+
+/{path_to_catalina_file}/catalina*.* {
+copytruncate
+daily
+rotate 5
+compress
+missingok
+size 20kb
+}
+Now if you want to check the file that we created then command – 
+more tomcat
+The following parameters are used for:
+•	copytruncate – truncates the original log file in place after creating a copy, instead of moving the old log file and optionally creating a new one.
+•	daily – rotate the log every day.
+•	rotate – how many rotation logs to keep.
+•	compress – if this value is written the log will be compressed.
+•	missingok – if the log file is missing, go on to the next one without issuing an error message.
+•	size #m –To specify a file size for logrotate to check when determining whether to perform a rotation. 
+You can run the rotation by adding a cron task. for example, define it on the /etc/cron.hourly/, or run this task manually by running /usr/sbin/logrotate /etc/logrotate.conf
+What is tomcat’s catalina.out log file is?
+It is basically keeps information about logs such as startup and shutdown of the tomcat application server, deployment of the new applications.

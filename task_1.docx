@@ -1,0 +1,22 @@
+1.Install and configure apache/httpd – we need to type the follow commands- 
+sudo apt-get update
+sudo apt-get install apache2
+it will get install into – cd /etc/apache2
+
+apache’s document root is by default at - /var/www/html.
+html directory will already have index.html (default page of apache introduction). Make your new html file or edit the default index page. That webpage should say – 
+'hi! i am devops ninja'.
+
+2.Now install  and configure nginx to run as reverse proxy to apache –
+
+For installation of nginx, we have to type following command- sudo apt-get install nginx 
+
+It will get install and by default it will run on port 80, but the nginx won’t start as we cannot run another application on same port in which our previous application (apache) is already install. So, change the port number by going to config file of nginx. The command for that is 
+sudo vi  /etc/nginx/conf.d/default.conf 
+
+Change the listen port number to another port other than 80. 
+
+Now configuring nginx to run as reverse proxy to apache – 
+Set proxy_pass to http://127.0.0.1; which is also equal to default port 80 and access log root to the path where our html files are placed (as we set above in apche- /var/www/html). 
+3.webpage should say - 'hi! i am devops ninja'   			- done above 
+
